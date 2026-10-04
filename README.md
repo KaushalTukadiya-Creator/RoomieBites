@@ -25,7 +25,7 @@ I built **RoomieBites** for my roommate **Alex** (and our apartment circle). Ale
 
 RoomieBites runs completely client-side with zero build steps or complex dependencies required. 
 
-**Live Local Demo :** Open ['https://kaushaltukadiya-creator.github.io/RoomieBites/'] in amy mordern browser.
+- **Live Local Demo :** Open [https://kaushaltukadiya-creator.github.io/RoomieBites/] in amy mordern browser.
 
 ### Quick Preview & Walkthrough:
 1. **Household Safety Status**: The top banner dynamically updates to reflect who is being protected (e.g., *Protecting Alex: ⚠️ Avoids Peanuts, Tree Nuts, Gluten*).
@@ -92,11 +92,10 @@ Open innovation matters because:
 
 ## My Agent Session
 
-This application was conceptualized, designed, and developed in a continuous session with Google Antigravity.
-
-You can inspect the full agent workflow, design decisions, and coding iterations in the session transcript:
-
-{% agent_session 440e0d6f-f2da-4ccb-80d6-d455a084b204 %}
+This project was developed through an interactive human-in-the-loop pair programming session using the **Antigravity IDE**:
+* Refined form requirements and accessibility guidelines.
+* Iterated on fintech UI aesthetics (converting a basic table into a modern dashboard with ambient glows, icon wrappers, and category pills).
+* Audited input validation and LocalStorage serialization.
 
 ---
 
@@ -104,5 +103,10 @@ You can inspect the full agent workflow, design decisions, and coding iterations
 
 - **Build for a Friend**: Dedicated to my roommate Alex, transforming stressful shared-kitchen meal planning into a safe, joyful everyday routine.
 
-<!-- Team Submissions: Built solo for my friend and roommates -->
-<!-- Thanks for participating in Hacktoberfest! -->
+<!-- Team Submissions: Built solo by a second-year IT engineering student for Hacktoberfest 2026 -->
+
+*Thank you to the DEV Community and the Hacktoberfest team for fostering open-source innovation!*
+
+## 📄 License
+
+This project is open-source and free to use for educational purposes under the [MIT License](https://opensource.org/licenses/MIT). 
