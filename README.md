@@ -25,6 +25,8 @@ I built **RoomieBites** for my roommate **Alex** (and our apartment circle). Ale
 
 RoomieBites runs completely client-side with zero build steps or complex dependencies required. 
 
+**Live Local Demo :** Open ['https://kaushaltukadiya-creator.github.io/RoomieBites/'] in amy mordern browser.
+
 ### Quick Preview & Walkthrough:
 1. **Household Safety Status**: The top banner dynamically updates to reflect who is being protected (e.g., *Protecting Alex: ⚠️ Avoids Peanuts, Tree Nuts, Gluten*).
 2. **Weekly Meal Calendar**: Displays Monday through Sunday across 4 daily slots. Click **"✨ Auto-Fill Safe Week"** to instantly generate an allergen-free week.
