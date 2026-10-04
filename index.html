@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoomieBites - Allergy-Safe Roommate Meal Planner</title>
+  <meta name="description"
+    content="A simple, smart meal planner that keeps track of your roommate's food allergies and dietary preferences, suggests safe meals, plans weekly schedules, and generates shopping lists.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Header & Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <span class="shield-badge">🛡️</span>
+          <span class="food-emoji">🥑</span>
+        </div>
+        <div class="brand-text">
+          <h1>RoomieBites</h1>
+          <p class="tagline">Allergy-Safe Roommate Meal Planner</p>
+        </div>
+      </div>
+
+      <!-- Household / Active Roommate Safety Bar -->
+      <div class="safety-selector-bar">
+        <label for="activeRoommateSelect" class="selector-label">
+          <span class="pulse-indicator"></span> Protecting:
+        </label>
+        <div class="select-wrapper">
+          <select id="activeRoommateSelect" aria-label="Select roommate to protect against allergens">
+            <!-- Populated dynamically via JS -->
+          </select>
+        </div>
+        <button id="manageRoommatesBtn" class="btn btn-secondary btn-sm" title="Edit roommates & allergens">
+          <span>👥</span> Manage Profiles
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" data-tab="plannerTab" role="tab" id="tab-planner" aria-selected="true">
+          <span class="tab-icon">📅</span>
+          <span class="tab-label">Weekly Plan</span>
+        </button>
+        <button class="nav-tab" data-tab="suggestionsTab" role="tab" id="tab-suggestions" aria-selected="false">
+          <span class="tab-icon">✨</span>
+          <span class="tab-label">Safe Meals</span>
+        </button>
+        <button class="nav-tab" data-tab="shoppingTab" role="tab" id="tab-shopping" aria-selected="false">
+          <span class="tab-icon">🛒</span>
+          <span class="tab-label">Shopping List</span>
+          <span id="shoppingBadge" class="badge-counter">0</span>
+        </button>
+        <button class="nav-tab" data-tab="roommatesTab" role="tab" id="tab-roommates" aria-selected="false">
+          <span class="tab-icon">🧑‍🤝‍🧑</span>
+          <span class="tab-label">Roommates</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <!-- Active Safety Banner -->
+    <div id="activeSafetyBanner" class="safety-status-banner">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- TAB 1: WEEKLY PLANNER -->
+    <section id="plannerTab" class="tab-panel active" role="tabpanel">
+      <div class="panel-header">
+        <div class="header-titles">
+          <h2>Weekly Meal Calendar</h2>
+          <p class="section-subtitle">Plan safe, allergen-free breakfasts, lunches, and dinners for your household</p>
+        </div>
+        <div class="header-actions">
+          <button id="autoPlanSafeWeekBtn" class="btn btn-primary">
+            <span>✨</span> Auto-Fill Safe Week
+          </button>
+          <button id="exportPlanBtn" class="btn btn-secondary">
+            <span>📋</span> Copy Plan Summary
+          </button>
+          <button id="clearPlanBtn" class="btn btn-danger-outline" title="Clear all planned meals for the week">
+            <span>🗑️</span> Clear Week
+          </button>
+        </div>
+      </div>
+
+      <!-- Days Grid (Mon-Sun) -->
+      <div class="weekly-grid" id="weeklyGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: SAFE MEALS & RECIPES -->
+    <section id="suggestionsTab" class="tab-panel" role="tabpanel">
+      <div class="panel-header">
+        <div class="header-titles">
+          <h2>Meal Catalog & Suggestions</h2>
+          <p class="section-subtitle">Recipes filtered against allergens and dietary requirements</p>
+        </div>
+        <div class="header-actions">
+          <button id="addNewMealBtn" class="btn btn-accent">
+            <span>➕</span> Add Custom Recipe
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters & Search Bar -->
+      <div class="catalog-controls">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="recipeSearchInput" placeholder="Search by meal name, ingredient..."
+            aria-label="Search recipes">
+          <button id="clearSearchBtn" class="btn-clear-search" aria-label="Clear search">&times;</button>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-toggle-label">
+            <input type="checkbox" id="safeOnlyCheckbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text"><strong>Strictly Safe Only</strong></span>
+          </label>
+
+          <select id="categoryFilter" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Snack">Snack</option>
+          </select>
+
+          <select id="dietFilter" aria-label="Filter by diet">
+            <option value="all">All Diets</option>
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Gluten-Free">Gluten-Free</option>
+            <option value="High-Protein">High-Protein</option>
+            <option value="Dairy-Free">Dairy-Free</option>
+          </select>
+
+          <select id="timeFilter" aria-label="Filter by time">
+            <option value="all">Any Cook Time</option>
+            <option value="20">Under 20 mins</option>
+            <option value="35">Under 35 mins</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results summary counter -->
+      <div class="results-stats" id="recipeResultsStats">
+        Showing all recipes
+      </div>
+
+      <!-- Recipe Cards Grid -->
+      <div class="recipe-cards-grid" id="recipeCardsGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 3: SHOPPING LIST -->
+    <section id="shoppingTab" class="tab-panel" role="tabpanel">
+      <div class="panel-header">
+        <div class="header-titles">
+          <h2>Smart Shopping List</h2>
+          <p class="section-subtitle">Aggregated ingredients from your weekly meal plan, sorted by grocery aisle</p>
+        </div>
+        <div class="header-actions">
+          <button id="copyShoppingListBtn" class="btn btn-secondary">
+            <span>📋</span> Copy to Clipboard
+          </button>
+          <button id="printShoppingListBtn" class="btn btn-secondary">
+            <span>🖨️</span> Print / Save PDF
+          </button>
+          <button id="clearCheckedBtn" class="btn btn-danger-outline">
+            <span>🧹</span> Clear Checked
+          </button>
+        </div>
+      </div>
+
+      <div class="shopping-layout">
+        <div class="shopping-main">
+          <!-- Add Custom Item Bar -->
+          <div class="add-custom-item-bar">
+            <form id="addCustomItemForm">
+              <input type="text" id="customItemName" placeholder="Add extra item (e.g. Oat milk, Olive oil, Apples)..."
+                required>
+              <select id="customItemCategory">
+                <option value="Produce">Produce</option>
+                <option value="Dairy & Substitutes">Dairy & Substitutes</option>
+                <option value="Meat, Fish & Protein">Meat & Protein</option>
+                <option value="Grains & Bakery">Grains & Bakery</option>
+                <option value="Pantry & Condiments">Pantry</option>
+                <option value="Other">Other</option>
+              </select>
+              <button type="submit" class="btn btn-primary btn-sm">Add Item</button>
+            </form>
+          </div>
+
+          <!-- Shopping Progress Bar -->
+          <div class="shopping-progress-card">
+            <div class="progress-info">
+              <span id="shoppingProgressText">0 of 0 items checked</span>
+              <span id="shoppingProgressPercent">0%</span>
+            </div>
+            <div class="progress-bar-track">
+              <div id="shoppingProgressBar" class="progress-bar-fill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- Grouped Shopping List Containers -->
+          <div id="shoppingCategoriesContainer" class="shopping-categories">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Shopping Summary Sidebar -->
+        <aside class="shopping-sidebar">
+          <div class="sidebar-card">
+            <h3>Plan Source</h3>
+            <p class="sidebar-help">These ingredients are dynamically generated from <strong
+                id="planMealCount">0</strong> planned meals.</p>
+            <div class="plan-meals-preview" id="plannedMealsMiniList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <div class="sidebar-card safety-reminder-box">
+            <h4>💡 Allergen Shopping Tip</h4>
+            <p>Always verify ingredient packaging labels for "Manufactured in a facility that processes..." warnings,
+              particularly for nuts, soy, and gluten.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- TAB 4: ROOMMATE PROFILES -->
+    <section id="roommatesTab" class="tab-panel" role="tabpanel">
+      <div class="panel-header">
+        <div class="header-titles">
+          <h2>Roommate Dietary Profiles</h2>
+          <p class="section-subtitle">Record and manage each roommate's food allergies, intolerances, and preferences
+          </p>
+        </div>
+        <div class="header-actions">
+          <button id="addRoommateBtn" class="btn btn-primary">
+            <span>➕</span> Add Roommate
+          </button>
+        </div>
+      </div>
+
+      <div class="roommate-profiles-grid" id="roommatesGrid">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- 1. Add/Edit Roommate Modal -->
+  <div id="roommateModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="roommateModalTitle">Add Roommate Profile</h3>
+        <button class="modal-close" data-close-modal="roommateModal">&times;</button>
+      </div>
+      <form id="roommateForm">
+        <div class="modal-body">
+          <input type="hidden" id="roommateEditId" value="">
+
+          <div class="form-group">
+            <label for="roommateName">Roommate Name *</label>
+            <input type="text" id="roommateName" placeholder="e.g. Alex, Sam, Jordan" required>
+          </div>
+
+          <div class="form-group">
+            <label for="roommateAvatar">Avatar / Emoji</label>
+            <div class="emoji-picker-row">
+              <input type="text" id="roommateAvatar" value="🥑" maxlength="2" class="emoji-input">
+              <span class="emoji-suggestions" id="emojiSuggestions">
+                <button type="button" class="btn-emoji">🥑</button>
+                <button type="button" class="btn-emoji">🦊</button>
+                <button type="button" class="btn-emoji">🦁</button>
+                <button type="button" class="btn-emoji">🐼</button>
+                <button type="button" class="btn-emoji">🚀</button>
+                <button type="button" class="btn-emoji">⭐</button>
+                <button type="button" class="btn-emoji">🍕</button>
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="group-label">Known Allergens & Intolerances (Crucial) ⚠️</label>
+            <p class="form-help">Any recipe containing these will be flagged with high-alert warnings.</p>
+            <div class="checkbox-tag-cloud" id="allergenCheckboxCloud">
+              <!-- Common allergens populated in JS -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="group-label">Dietary Preferences</label>
+            <div class="checkbox-tag-cloud" id="dietCheckboxCloud">
+              <!-- Diets populated in JS -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="roommateDislikes">Disliked Ingredients or Notes</label>
+            <input type="text" id="roommateDislikes" placeholder="e.g. Hates cilantro, no spicy food, prefers oat milk">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="roommateModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Pick Meal For Slot Modal -->
+  <div id="pickMealModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div>
+          <h3 id="pickMealModalTitle">Choose Meal</h3>
+          <p id="pickMealModalSubtitle" class="modal-subtitle">Selecting for Monday Lunch</p>
+        </div>
+        <button class="modal-close" data-close-modal="pickMealModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="slot-filter-row">
+          <input type="text" id="slotMealSearch" placeholder="Filter meals..." class="input-sm">
+          <label class="filter-toggle-label">
+            <input type="checkbox" id="slotSafeOnlyCheckbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Strictly Safe</span>
+          </label>
+        </div>
+        <div class="slot-meal-picker-list" id="slotMealPickerList">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal="pickMealModal">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Add Custom Recipe Modal -->
+  <div id="recipeModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 id="recipeModalTitle">Create Custom Recipe</h3>
+        <button class="modal-close" data-close-modal="recipeModal">&times;</button>
+      </div>
+      <form id="customRecipeForm">
+        <div class="modal-body">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="recipeName">Meal Name *</label>
+              <input type="text" id="recipeName" placeholder="e.g. Crispy Tofu Grain Bowl" required>
+            </div>
+            <div class="form-group">
+              <label for="recipeCategory">Meal Type *</label>
+              <select id="recipeCategory" required>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner" selected>Dinner</option>
+                <option value="Snack">Snack</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="recipeTime">Cook Time (Minutes)</label>
+              <input type="number" id="recipeTime" min="5" max="180" value="25">
+            </div>
+            <div class="form-group">
+              <label for="recipeServings">Servings</label>
+              <input type="number" id="recipeServings" min="1" max="12" value="2">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="recipeDescription">Short Description</label>
+            <input type="text" id="recipeDescription" placeholder="Quick and hearty dinner packed with nutrients">
+          </div>
+
+          <div class="form-group">
+            <label class="group-label">Contains Allergens (Check all present):</label>
+            <div class="checkbox-tag-cloud" id="recipeAllergenCloud">
+              <!-- Dynamically populated in JS -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="group-label">Dietary Tags:</label>
+            <div class="checkbox-tag-cloud" id="recipeDietCloud">
+              <!-- Dynamically populated in JS -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="recipeIngredients">Ingredients (One item per line with optional aisle in brackets):</label>
+            <p class="form-help">Format: <code>2 cups Jasmine Rice [Grains]</code> or
+              <code>1 block Firm Tofu [Produce]</code></p>
+            <textarea id="recipeIngredients" rows="5"
+              placeholder="1 block Firm Tofu [Produce]&#10;2 tbsp Tamari Soy Sauce [Pantry]&#10;1 cup Broccoli florets [Produce]&#10;1 tbsp Sesame seeds [Pantry]"
+              required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="recipeInstructions">Cooking Instructions / Notes (Optional)</label>
+            <textarea id="recipeInstructions" rows="3"
+              placeholder="Press and cube tofu, sauté with broccoli in sesame oil, drizzle tamari and serve hot."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="recipeModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Recipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Recipe Detail Modal -->
+  <div id="recipeDetailModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div id="detailHeaderTitle">
+          <!-- Rendered in JS -->
+        </div>
+        <button class="modal-close" data-close-modal="recipeDetailModal">&times;</button>
+      </div>
+      <div class="modal-body" id="recipeDetailBody">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal="recipeDetailModal">Close</button>
+        <button type="button" id="detailAddToPlanBtn" class="btn btn-primary">Add to Meal Plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Toast Notification System -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+
+</html>
